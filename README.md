@@ -1,2 +1,2 @@
 # python-ocean
-atividade sobre oceanos em python
+Atividade sobre oceanos em python.
