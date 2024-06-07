@@ -1,5 +1,4 @@
 from typing_extensions import Any, List
-from typing import Union
 from fastapi import FastAPI
 import asyncio
 from util.global_plastic import UtilsGlobalPlastic
@@ -13,11 +12,11 @@ async def formatResponse(sites: List[Any]) -> List[Any]:
     geocodes = await asyncio.gather(*tasks)
     response = []
     for i, site in enumerate(sites):
-        if geocodes[i]["hits"]:
+        if geocodes[i].get("hits", False):
             hit = geocodes[i]["hits"][0]
             response.append({
                 "localizacao": {
-                    "country": hit.get("country", ""),
+                    "pais": hit.get("country", ""),
                     "cep": hit.get("postcode", ""),
                     "estado": hit.get("state", ""),
                     "cidade": hit.get("city", ""),
