@@ -13,31 +13,32 @@ async def formatResponse(sites: List[Any]) -> List[Any]:
     geocodes = await asyncio.gather(*tasks)
     response = []
     for i, site in enumerate(sites):
-        hit = geocodes[i]["hits"][0]
-        response.append({
-            "localizacao": {
-                "country": hit.get("country", ""),
-                "cep": hit.get("postcode", ""),
-                "estado": hit.get("state", ""),
-                "cidade": hit.get("city", ""),
-                "logradouro": hit.get("name", ""),
-            },
-            "populacao_area": {
-                "1km": site["properties"].get("Population - 1 km", ""),
-                "5km": site["properties"].get("Population - 5 km", ""),
-                "10km": site["properties"].get("Population - 10 km", "")
-            },
-            "area": {
-                "geometry": {
-                    "type": site["geometry"].get("type"),
-                    "coordinates": [
-                        site["geometry"]["coordinates"][0],
-                        site["geometry"]["coordinates"][1]
-                    ]
-                }
-            },
-            "risco": site["properties"]["risk"]
-        })
+        if geocodes[i]["hits"]:
+            hit = geocodes[i]["hits"][0]
+            response.append({
+                "localizacao": {
+                    "country": hit.get("country", ""),
+                    "cep": hit.get("postcode", ""),
+                    "estado": hit.get("state", ""),
+                    "cidade": hit.get("city", ""),
+                    "logradouro": hit.get("name", ""),
+                },
+                "populacao_area": {
+                    "1km": site["properties"].get("Population - 1 km", ""),
+                    "5km": site["properties"].get("Population - 5 km", ""),
+                    "10km": site["properties"].get("Population - 10 km", "")
+                },
+                "area": {
+                    "geometry": {
+                        "type": site["geometry"].get("type"),
+                        "coordinates": [
+                            site["geometry"]["coordinates"][0],
+                            site["geometry"]["coordinates"][1]
+                        ]
+                    }
+                },
+                "risco": site["properties"]["risk"]
+            })
     return response
 
 @app.get("/location/pollution/{country}")
